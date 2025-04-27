@@ -1,30 +1,65 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/utils/position_colors.dart';
 
-class MatchupsPage extends StatelessWidget {
+class MatchupsPage extends StatefulWidget {
   const MatchupsPage({super.key});
+
+  @override
+  State<MatchupsPage> createState() => _MatchupsPageState();
+}
+
+class _MatchupsPageState extends State<MatchupsPage> {
+  int currentWeek = 1;
+
+  // Example data for multiple weeks
+  final List<Map<String, dynamic>> weeksData = [
+    {
+      'week': 1,
+      'teamA': {
+        'name': 'Paul',
+        'players': [
+          {'position': 'QB', 'name': 'Patrick Mahomes', 'team': 'KC', 'points': 25.5},
+          {'position': 'RB', 'name': 'Christian McCaffrey', 'team': 'SF', 'points': 22.1},
+          {'position': 'WR', 'name': 'Tyreek Hill', 'team': 'MIA', 'points': 18.7},
+        ],
+      },
+      'teamB': {
+        'name': 'Chris',
+        'players': [
+          {'position': 'QB', 'name': 'Josh Allen', 'team': 'BUF', 'points': 20.3},
+          {'position': 'RB', 'name': 'Derrick Henry', 'team': 'TEN', 'points': 15.6},
+          {'position': 'WR', 'name': 'Justin Jefferson', 'team': 'MIN', 'points': 19.2},
+        ],
+      },
+    },
+    {
+      'week': 2,
+      'teamA': {
+        'name': 'Paul',
+        'players': [
+          {'position': 'QB', 'name': 'Joe Burrow', 'team': 'CIN', 'points': 23.1},
+          {'position': 'RB', 'name': 'Saquon Barkley', 'team': 'NYG', 'points': 18.4},
+          {'position': 'WR', 'name': 'Cooper Kupp', 'team': 'LAR', 'points': 20.2},
+        ],
+      },
+      'teamB': {
+        'name': 'Chris',
+        'players': [
+          {'position': 'QB', 'name': 'Jalen Hurts', 'team': 'PHI', 'points': 24.6},
+          {'position': 'RB', 'name': 'Nick Chubb', 'team': 'CLE', 'points': 19.0},
+          {'position': 'WR', 'name': 'Stefon Diggs', 'team': 'BUF', 'points': 17.8},
+        ],
+      },
+    },
+  ];
 
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
 
-    // Example team data
-    final teamA = {
-      'name': 'Paul',
-      'players': [
-        {'position': 'QB', 'name': 'Patrick Mahomes', 'team': 'KC', 'points': 25.5},
-        {'position': 'RB', 'name': 'Christian McCaffrey', 'team': 'SF', 'points': 22.1},
-        {'position': 'WR', 'name': 'Tyreek Hill', 'team': 'MIA', 'points': 18.7},
-      ],
-    };
-
-    final teamB = {
-      'name': 'Chris',
-      'players': [
-        {'position': 'QB', 'name': 'Josh Allen', 'team': 'BUF', 'points': 20.3},
-        {'position': 'RB', 'name': 'Derrick Henry', 'team': 'TEN', 'points': 15.6},
-        {'position': 'WR', 'name': 'Justin Jefferson', 'team': 'MIN', 'points': 19.2},
-      ],
-    };
+    final currentData = weeksData[currentWeek - 1];
+    final teamA = currentData['teamA'];
+    final teamB = currentData['teamB'];
 
     double totalPoints(List players) {
       return players.fold(0, (sum, p) => sum + (p['points'] as double));
@@ -35,7 +70,31 @@ class MatchupsPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Weekly Matchups'),
+        title: Row(
+          children: [
+            DropdownButton<int>(
+              value: currentWeek,
+              dropdownColor: Colors.grey[850], // dark background for dropdown
+              style: const TextStyle(color: Colors.white, fontSize: 18),
+              underline: Container(), // removes underline
+              iconEnabledColor: Colors.white,
+              items: List.generate(weeksData.length, (index) {
+                final week = weeksData[index]['week'] as int;
+                return DropdownMenuItem(
+                  value: week,
+                  child: Text(' Week $week'),
+                );
+              }),
+              onChanged: (value) {
+                if (value != null) {
+                  setState(() {
+                    currentWeek = value;
+                  });
+                }
+              },
+            ),
+          ],
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -132,18 +191,18 @@ class MatchupsPage extends StatelessWidget {
           dense: true,
           contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
           title: Row(
-            mainAxisAlignment: MainAxisAlignment.end,  
-            crossAxisAlignment: CrossAxisAlignment.center,  
+            mainAxisAlignment: MainAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
                 player['position'],
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.bold,
-                  color: _getPositionColor(player['position']),
+                  color: getPositionColor(player['position']),
                 ),
               ),
-              SizedBox(width: 10),  
+              const SizedBox(width: 10),
               Text(
                 '${player['name']} ',
                 style: const TextStyle(fontSize: 16, color: Colors.white),
@@ -152,7 +211,7 @@ class MatchupsPage extends StatelessWidget {
                 '(${player['team']})',
                 style: const TextStyle(fontSize: 14, color: Colors.grey),
               ),
-              SizedBox(width: 15), 
+              const SizedBox(width: 15),
               Text(
                 '${player['points']}',
                 style: const TextStyle(fontSize: 16, color: Colors.white),
@@ -173,14 +232,14 @@ class MatchupsPage extends StatelessWidget {
           dense: true,
           contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
           title: Row(
-            mainAxisAlignment: MainAxisAlignment.start,  
-            crossAxisAlignment: CrossAxisAlignment.center,  
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
                 '${player['points']}',
                 style: const TextStyle(fontSize: 16, color: Colors.white),
               ),
-              SizedBox(width: 15),
+              const SizedBox(width: 15),
               Text(
                 '(${player['team']})',
                 style: const TextStyle(fontSize: 14, color: Colors.grey),
@@ -189,13 +248,13 @@ class MatchupsPage extends StatelessWidget {
                 ' ${player['name']}',
                 style: const TextStyle(fontSize: 16, color: Colors.white),
               ),
-              SizedBox(width: 10), 
+              const SizedBox(width: 10),
               Text(
                 player['position'],
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.bold,
-                  color: _getPositionColor(player['position']),
+                  color: getPositionColor(player['position']),
                 ),
               ),
             ],
@@ -203,25 +262,5 @@ class MatchupsPage extends StatelessWidget {
         );
       },
     );
-  }
-
-
-  Color _getPositionColor(String position) {
-    switch (position) {
-      case 'QB':
-        return Colors.redAccent;
-      case 'RB':
-        return Colors.greenAccent;
-      case 'WR':
-        return Colors.lightBlueAccent;
-      case 'TE':
-        return Colors.purpleAccent;
-      case 'K':
-        return Colors.orangeAccent;
-      case 'DEF':
-        return Colors.tealAccent;
-      default:
-        return Colors.grey;
-    }
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/utils/position_colors.dart';
 
 class RostersPage extends StatelessWidget {
   const RostersPage({super.key});
@@ -41,25 +42,6 @@ class RostersPage extends StatelessWidget {
       ]
     },
   ];
-
-  Color getPositionColor(String position) {
-    switch (position) {
-      case 'QB':
-        return Colors.redAccent;
-      case 'RB':
-        return Colors.tealAccent;
-      case 'WR':
-        return Colors.lightBlueAccent;
-      case 'TE':
-        return Colors.orangeAccent;
-      case 'K':
-        return Colors.purpleAccent;
-      case 'DST':
-        return Colors.pinkAccent;
-      default:
-        return Colors.grey;
-    }
-  }
 
   Widget buildDivision(List<Map<String, dynamic>> teams) {
     return ListView.builder(

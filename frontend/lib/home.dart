@@ -25,12 +25,20 @@ class HomePage extends StatelessWidget {
               },
               child: const Text('View Rosters'),
             ),
+            const SizedBox(height: 40),
             ElevatedButton(
               onPressed: () {
                 Navigator.pushNamed(context, '/matchups');
               },
               child: const Text('View Matchup'),
-),
+            ),
+            const SizedBox(height: 40),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pushNamed(context, '/lineups');
+              },
+              child: const Text('Change Lineup'),
+            ),
           ],
         ),
       ),

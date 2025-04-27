@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'home.dart';
 import 'rosters.dart';
 import 'matchups.dart';
+import 'lineups.dart';
 
 void main() {
   runApp(const MyApp());
@@ -39,6 +40,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/rosters': (context) => const RostersPage(),
         '/matchups': (context) => const MatchupsPage(),
+        '/lineups': (context) => const LineupsPage(),
       },
     );
   }
